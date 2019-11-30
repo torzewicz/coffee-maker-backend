@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 @Service
@@ -21,6 +22,7 @@ public class CoffeeService {
 
     private static final Logger LOGGER = Logger.getLogger(CoffeeController.class);
     private static final Gson GSON = new Gson();
+    private static final DecimalFormat decimalFormat = new DecimalFormat("#.##");
 
     public CoffeeService(SimpMessagingTemplate simpMessagingTemplate, AlertRepository alertRepository) {
         this.simpMessagingTemplate = simpMessagingTemplate;
@@ -34,6 +36,9 @@ public class CoffeeService {
     }
 
     public MixingContainer updateIngredientsLevel(MixingContainer mixingContainer) {
+        mixingContainer.setCurrentCoffeeLevel(Math.round(mixingContainer.getCurrentMilkLevel() * 100) / 100D);
+        mixingContainer.setCurrentMilkLevel(Math.round(mixingContainer.getCurrentMilkLevel() * 100) / 100D);
+        mixingContainer.setCurrentSugarLevel(Math.round(mixingContainer.getCurrentSugarLevel() * 100) / 100D);
         LOGGER.debug("Updating container with values: " + GSON.toJson(mixingContainer));
         this.mixingContainer = mixingContainer;
         new IngredientsWatcher(mixingContainer, simpMessagingTemplate, alertRepository).start();

@@ -70,14 +70,16 @@ public class IngredientsWatcher extends Thread {
             buildAndSentAlert(alarmType, "Critical milk level", mixingContainer.getCurrentMilkLevel());
         }
 
-//        IngredientsStatus ingredientsStatus = ingredientsStatusBuilder
-//                .currentCoffeeLevel(mixingContainer.getCurrentCoffeeLevel())
-//                .currentSugarLevel(mixingContainer.getCurrentSugarLevel())
-//                .currentMilkLevel(mixingContainer.getCurrentMilkLevel())
-//                .build();
+        IngredientsStatus ingredientsStatus = ingredientsStatusBuilder
+                .currentCoffeeLevel(mixingContainer.getCurrentCoffeeLevel())
+                .currentSugarLevel(mixingContainer.getCurrentSugarLevel())
+                .currentMilkLevel(mixingContainer.getCurrentMilkLevel())
+                .build();
 
-//        LOGGER.debug("Sending message to admin with values: " + GSON.toJson(ingredientsStatus));
-//        this.simpMessagingTemplate.convertAndSend("topic/admin/ingredients", ingredientsStatus);
+
+
+        LOGGER.debug("Sending message to admin with values: " + GSON.toJson(ingredientsStatus));
+        this.simpMessagingTemplate.convertAndSend("/topic/admin/ingredients", ingredientsStatus);
     }
 
     private void buildAndSentAlert(AlarmType alarmType, String message, Double value) {
@@ -89,8 +91,8 @@ public class IngredientsWatcher extends Thread {
                 .info(info)
                 .build();
 
-//        LOGGER.debug("Sending alert with info: " + info);
-//        this.simpMessagingTemplate.convertAndSend("topic/admin/alert", this.alertRepository.save(alert));
+        LOGGER.debug("Sending alert with info: " + info);
+        this.simpMessagingTemplate.convertAndSend("/topic/admin/alert", this.alertRepository.save(alert));
     }
 }
 
